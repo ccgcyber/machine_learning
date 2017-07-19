@@ -1,4 +1,4 @@
 Need to install modules, where:
-pylab：
-sudo apt-get install python-numpy python-scipy python-matplotlib
 
+pylab：
+sudo yum install numpy scipy python-matplotlib pygtk2
