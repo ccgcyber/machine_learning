@@ -4,88 +4,87 @@ import time
 import matplotlib.pyplot as plt
 
 
-# 计算欧式距离
+# Calculate the European distance
 def euclDistance(vector1, vector2):
     return sqrt(sum(power(vector2 - vector1, 2)))
     # 0ρ = sqrt( (x1-x2)^2+(y1-y2)^2 )　|x| = √( x2 + y2 )
-    # power 对列表计算2次方  求和后开方
+    # power Calculate the second order of the list
 
-# 初始化质心随机样本
+# Initialized centroid random samples
 def initCentroids(dataSet, k):
-    numSamples, dim = dataSet.shape #获取数据集合的行列总数
+    numSamples, dim = dataSet.shape # Gets the total number of rows in the data collection
     centroids = zeros((k, dim))
     for i in range(k):
         index = int(random.uniform(0, numSamples))
-        # uniform() 方法将随机生成下一个实数，它在[x,y]范围内。
+        # uniform() The method will randomly generate the next real number，it is within the range [x,y]。
         centroids[i, :] = dataSet[index, :]
     return centroids
 
 # k-means cluster
 def kmeans(dataSet, k):
-    numSamples = dataSet.shape[0]#行数
+    numSamples = dataSet.shape[0]# Rows
 
     clusterAssment = mat(zeros((numSamples, 2))) #
 
-    clusterChanged = True #停止循环标志位
+    clusterChanged = True #Stop loop flag
 
-    ## step 1: init 初始化k个质点
+    ## step 1: init, Initialize k particles
     centroids = initCentroids(dataSet, k)
 
     while clusterChanged:
         clusterChanged = False
         ## for each 行
         for i in xrange(numSamples):
-            minDist  = 100000.0 # 设定一个极大值
+            minDist  = 100000.0 # Set a maximum value
             minIndex = 0
             ## for each centroid
-            ## step 2: 寻找最接近的质心
+            ## step 2: Looking for the closest centroid
             for j in range(k):
                 distance = euclDistance(centroids[j, :], dataSet[i, :])
-                # 将centroids（k个初始化质心）的j行和dataset（数据全集）的i行 算欧式距离，返回数值型距离
+                # will centroids （K initialize centroid） The j line and dataset （ Data collection ） Of the E line of Euclidean distance，Returns the numerical distance
                 if distance < minDist:
-                # 找距离最近的质点，记录下来。
+                # Find the nearest spot，record it。
                     minDist  = distance
                     minIndex = j
 
 
-            ## step 3: update its cluster # 跟新这个簇
+            ## step 3: update its cluster # Update this cluster
             if clusterAssment[i, 0] != minIndex:
-                clusterChanged = True  # clusterAssment 是一个n行2列的矩阵  Assment 评估
-                clusterAssment[i, :] = minIndex, minDist**2 #赋值为 新的质点标号
+                clusterChanged = True  # clusterAssment Is a matrix of n rows and 2 columns  Assment Evaluation
+                clusterAssment[i, :] = minIndex, minDist**2 # Assigned a new mark
 
         ## step 4: update centroids
         for j in range(k):
-            # 属于j这个质点的所有数值的平均值算出成为新的质点
+            # The average of all the values ​​belonging to this particle is calculated as a new particle
             pointsInCluster = dataSet[nonzero(clusterAssment[:, 0].A == j)[0]]
             centroids[j, :] = mean(pointsInCluster, axis = 0)
 
     print 'Congratulations, cluster complete!'
     return centroids, clusterAssment
 
-# 二分k均值算法
+# Two - point k - means algorithm
 def biKmeans(dataSet, k):
     numSamples = dataSet.shape[0]
     # first column stores which cluster this sample belongs to,
     # second column stores the error between this sample and its centroid
     clusterAssment = mat(zeros((numSamples, 2)))
-    # 初始化簇的评估表 值为0的num行2列矩阵
-
+    # Initialize the cluster evaluation table with the value of 0 for the row line 2 column matrix
     # step 1: the init cluster is the whole data set
-    # 最初的簇是整个数据集合,算
+    # The initial cluster is the entire data set,Count
     centroid = mean(dataSet, axis = 0).tolist()[0]
-    # mean 处理之后是matrix([[  22.32695245,  114.25989385]]) 需要用tolist转换 成为图心
+    # mean After processing is matrix([[  22.32695245,  114.25989385]]) Need to use tolist converted into a heart
     centList = [centroid]
-    # 设定初始中心列表,至少有一个簇组
+    # Set the initial center list, There is at least one cluster
 
     for i in xrange(numSamples):
         clusterAssment[i, 1] = euclDistance(mat(centroid), dataSet[i, :])**2
-        # 计算每一个点与当前图心的距离
+        # Calculate the distance between each point and the current figure
         # print mat(centroid), dataSet[i, :]
         # [[  22.32695245  114.25989385]] [[  22.325637  114.25936 ]]
 
 
     while len(centList) < k:
-        # 逐步增加簇数，直到抵达k值
+        # Gradually increase the number of clusters，Until the k value is reached
         # min sum of square error
         minSSE = 100000.0
         numCurrCluster = len(centList)
@@ -93,26 +92,26 @@ def biKmeans(dataSet, k):
         for i in range(numCurrCluster):
             # step 2: get samples in cluster i
             pointsInCurrCluster = dataSet[nonzero(clusterAssment[:, 0].A == i)[0], :]
-            # nonzero(a)返回数组a中值不为零的元素的下标，它的返回值是一个长度为a.ndim
-            # (数组a的轴数)的元组，元组的每个元素都是一个整数数组，其值为非零元素的下标在对应轴上的值
-            # point 最终值为
+            # nonzero(a) :: Returns the subscript of the element whose value is not zero in array a, and its return value is a length a.ndim
+            # (The number of axes of array a), each element of the tuple is an array of integers whose value is the value of the index of the nonzero element on the corresponding axis
+            # point :: the final value is
             #       matrix([[  22.325637,  114.25936 ],
             #       [  22.325522,  114.259091],
             #       [  22.328594,  114.256648],
 
             # step 3: cluster it to 2 sub-clusters using k-means
-            # 将在给定的簇上面进行k-均值聚类 一分为二
+            # The k-means clustering on a given cluster will be divided into two
             centroids, splitClusterAssment = kmeans(pointsInCurrCluster, 2)
 
 
             # step 4: calculate the sum of square error after split this cluster
-            # 计算将该簇一分为二后的总误差
+            # Calculate the total error after dividing the cluster into two
             splitSSE = sum(splitClusterAssment[:, 1])
             notSplitSSE = sum(clusterAssment[nonzero(clusterAssment[:, 0].A != i)[0], 1])
             currSplitSSE = splitSSE + notSplitSSE
 
             # step 5: find the best split cluster which has the min sum of square error
-            # 查找具有最小平方误差和最小平方和的最优分割聚类
+            # Find the optimal segmentation clustering with the least squares error and the least square sum
             if currSplitSSE < minSSE:
                 minSSE = currSplitSSE
                 bestCentroidToSplit = i
@@ -120,17 +119,17 @@ def biKmeans(dataSet, k):
                 bestClusterAssment = splitClusterAssment.copy()
 
         # step 6: modify the cluster index for adding new cluster
-        # 修改添加新群集的群集索引
+        # Modify the cluster index to add a new cluster
         bestClusterAssment[nonzero(bestClusterAssment[:, 0].A == 1)[0], 0] = numCurrCluster
         bestClusterAssment[nonzero(bestClusterAssment[:, 0].A == 0)[0], 0] = bestCentroidToSplit
 
         # step 7: update and append the centroids of the new 2 sub-cluster
-        # 更新和添加新的2子簇的质心
+        # Update and add the new 2 subgroup of centroids
         centList[bestCentroidToSplit] = bestNewCentroids[0, :]
         centList.append(bestNewCentroids[1, :])
 
         # step 8: update the index and error of the samples whose cluster have been changed
-        # 更新已更改群集的样本的索引和错误
+        # Updates the indexes and errors of the samples that have changed the cluster
         clusterAssment[nonzero(clusterAssment[:, 0].A == bestCentroidToSplit), :] = bestClusterAssment
 
     print 'Congratulations, cluster using bi-kmeans complete!'
@@ -149,7 +148,7 @@ def showCluster(dataSet, k, centroids, clusterAssment):
         print "Sorry! Your k is too large! please contact Zouxy"
         return 1
 
-    # 画出所有样例点 属于同一分类的绘制同样的颜色
+    # Draw all the sample points that belong to the same class to draw the same color
     for i in xrange(numSamples):
         markIndex = int(clusterAssment[i, 0])
         plt.plot(dataSet[i, 0], dataSet[i, 1], mark[markIndex])
@@ -157,7 +156,7 @@ def showCluster(dataSet, k, centroids, clusterAssment):
     mark = ['Dr', 'Db', 'Dg', 'Dk', '^b', '+b', 'sb', 'db', '<b', 'pb']
 
     # draw the centroids
-    # 画出质点，用特殊图型
+    # Draw a particle, with a special pattern
     for i in range(k):
         plt.plot(centroids[i, 0], centroids[i, 1], mark[i], markersize = 12)
         print centroids[i, 0], centroids[i, 1]
@@ -165,24 +164,24 @@ def showCluster(dataSet, k, centroids, clusterAssment):
     plt.show()
 
 if __name__ == '__main__':
-    ## step 1: 加载数据
+    ## step 1: Load data
     print "step 1: load data..."
     dataSet = []
     fileIn = open('./data.txt')
     for line in fileIn.readlines():
         lineArr = line.strip().split(' ')
-        # Python strip() 方法用于移除字符串头尾指定的字符（默认为空格）
-        # 再按照数据之间的空格作为分隔符。
+        # Python strip() Method to remove the character specified by the head of the string (default is a space)
+        # And then follow the space between the data as a separator。
         dataSet.append([float(lineArr[0]), float(lineArr[1])])
-        # 返回加入到dataset中的每组数据为一个列表。形成二维数组
-    ## step 2: 开始聚类...
+        # Returns each set of data added to the dataset as a list. Form a two-dimensional array
+    ## step 2: Start clustering...
     print "step 2: clustering..."
     dataSet = mat(dataSet)
-    # mat 函数，将数组转化为矩阵
+    # mat Function, the array into a matrix
 
     k = 3
 
-    # 此部分可选择使用k均值还是二分k均值
+    # This part can choose to use k mean or two k average
 
     centroids, clusterAssment = kmeans(dataSet, k)
     #centroids, clusterAssment = biKmeans(dataSet, k)
