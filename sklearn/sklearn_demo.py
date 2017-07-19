@@ -56,4 +56,4 @@ if __name__ == '__main__':
 
     #print "step 2: clustering..."
     #dataSet = mat(dataSet)
-    # mat 函数，将数组转化为矩阵
+    # mat Function, the array into a matrix
