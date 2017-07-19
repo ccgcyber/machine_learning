@@ -79,7 +79,7 @@ num = 0
 while(num <= 19661):
     print '*******************************8',num,time.ctime()
 
-    # 载入数据集合
+    # Load the data collection
     ip3_up = (ip3_3[num])
     #ip3_up = ('1.36.'+str(ip3_3)+'.')
 
@@ -90,7 +90,7 @@ while(num <= 19661):
         time.sleep(10)
     X = np.array(dataSet) #list to array
 
-    # MeanShift 计算
+    # MeanShift Calculation
     try:
         bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=500)
         ms = MeanShift(bandwidth=bandwidth, bin_seeding=True,cluster_all=True).fit(X)
@@ -173,7 +173,7 @@ while(num <= 19661):
 clf = KMeans(n_clusters=k, random_state=0).fit(X)
 
 mark = ['or', 'ob', 'og', 'ok', '^r', '+r', 'sr', 'dr', '<r', 'pr']
-#画出所有样例点 属于同一分类的绘制同样的颜色
+#Draw all the sample points that belong to the same class to draw the same color
 print '************8888'
 for i in xrange(numSamples):
     plt.plot(dataSet[i][0], dataSet[i][1], mark[clf.labels_[i]]) #mark[markIndex])
@@ -181,7 +181,7 @@ for i in xrange(numSamples):
         pass
         #print "%0.6f %0.6f" %(dataSet[i][0]*(114.382373-113.848277)+113.848277 ,dataSet[i][1]*(22.529357-22.175509)+22.175509)
         #print clf.labels_[i],dataSet[i][0],dataSet[i][1]
-    # 画出质点，用特殊图型
+    # Draw a particle, with a special pattern
 print '************8888'
 
 mark = ['Dr', 'Db', 'Dg', 'Dk', '^b', '+b', 'sb', 'db', '<b', 'pb']
