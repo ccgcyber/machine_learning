@@ -3,5 +3,5 @@
 @blog:   http://blog.csdn.net/u012162613
 
 
-ÕâÊÇÒ»¸ökNNËã·¨µÄdemo£¬ÒÔÊÖĞ´Ê¶±ğÎªÊµÀı¡£
-´úÂëÏê½âÇë²Î¿¼±¾ÈËµÄ²©¿Í¡£
+This is a demo of a kNN algorithmï¼ŒTake handwriting recognition as an exampleã€‚
+Please refer to my blog for detailsã€‚
