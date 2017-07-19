@@ -7,19 +7,19 @@ def createDataSet():
     labels = ['C','C','A','A']
     #print group,labels
     return group,labels
-#inputX表示输入向量（也就是我们要判断它属于哪一类的）
-#dataSet表示训练样本
-#label表示训练样本的标签
-#k是最近邻的参数，选最近k个
+#inputX :: Represents the input vector (that is, we want to determine which class it belongs to)
+#dataSet :: Indicates training samples
+#label :: Indicates the label of the training sample
+#k :: Is the nearest neighbor parameter，Choose the most recent k
 def kNNclassify(inputX, dataSet, labels, k):
-    dataSetSize = dataSet.shape[0]#计算有几个训练数据
-    #开始计算欧几里得距离
+    dataSetSize = dataSet.shape[0]# Calculate there are several training data
+    # Began to calculate the Euclidean distance
     diffMat = tile(inputX, (dataSetSize,1)) - dataSet
     
     sqDiffMat = diffMat ** 2
-    sqDistances = sqDiffMat.sum(axis=1)#矩阵每一行向量相加
+    sqDistances = sqDiffMat.sum(axis=1)# The matrix adds each row of vectors
     distances = sqDistances ** 0.5
-    #欧几里得距离计算完毕
+    # Euclidean distance is calculated
     sortedDistance = distances.argsort()
     classCount = {}
     for i in xrange(k):
