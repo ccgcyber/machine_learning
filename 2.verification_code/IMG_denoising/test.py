@@ -167,4 +167,4 @@ if __name__ == '__main__':
     start = time.time()
     main()
     print "The Program end time:", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), "[%s]" % (time.time() - start)
-    # raw_input("输入任意键结束！！！".decode('utf-8').encode(Type))
+    # raw_input("Enter any key to end！！！".decode('utf-8').encode(Type))
