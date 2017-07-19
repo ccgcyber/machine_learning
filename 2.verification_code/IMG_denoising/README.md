@@ -1,2 +1,2 @@
-记录于 2016.9.8
-尝试用九宫格法判定并消除单噪点，双噪点，三噪点。
+Recorded in 2016.9.8
+Try to use Jiugongge method to determine and eliminate single noise, double noise, three noise。
