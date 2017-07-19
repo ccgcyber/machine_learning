@@ -2,7 +2,7 @@
 import sys,os
 from PIL import Image,ImageDraw
 
-#二值数组
+#Binary array
 t2val = {}
 def twoValue(image,G):
     for y in xrange(0,image.size[1]):
@@ -13,14 +13,14 @@ def twoValue(image,G):
             else:
                 t2val[(x,y)] = 0
 
-# 降噪
-# 根据一个点A的RGB值，与周围的8个点的RBG值比较，设定一个值N（0 <N <8），当A的RGB值与周围8个点的RGB相等数小于N时，此点为噪点
-# G: Integer 图像二值化阀值
-# N: Integer 降噪率 0 <N <8
-# Z: Integer 降噪次数
-# 输出
-#  0：降噪成功
-#  1：降噪失败
+# Noise reduction
+# According to the RGB value of a point A, a value N (0 <N <8) is set to be compared with the RBG value of the surrounding 8 points. When the RGB value of A is less than N with the RGB of the surrounding 8 points, This point for the noise
+# G: Integer Image binarization threshold
+# N: Integer Noise reduction rate 0 <N <8
+# Z: Integer Number of noise reductions
+# Output
+#  0：Noise reduction success
+#  1：Noise reduction failed
 def clearNoise(image,N,Z):
 
     for i in xrange(0,Z):
@@ -55,22 +55,22 @@ def clearNoise(image,N,Z):
 
 def pIx(self):
     data = self
-    #图片的长宽
+    #Picture length and width
     w = self.size[1]
     h = self.size[0]
 
-    #data.getpixel((x,y))获取目标像素点颜色。
-    #data.putpixel((x,y),255)更改像素点颜色，255代表颜色。
+    #data.getpixel((x,y)) Gets the target pixel color。
+    #data.putpixel((x,y),255) Change the pixel color，255 On behalf of color。
 
     try:
         for x in xrange(1,w-1):
             if x > 1 and x != w-2:
-                #获取目标像素点左右位置
+                #Gets the target pixel left and right position
                 left = x - 1
                 right = x + 1
 
             for y in xrange(1,h-1):
-                #获取目标像素点上下位置
+                # Get the target pixel up and down position
                 up = y - 1
                 down = y + 1
 
@@ -83,8 +83,8 @@ def pIx(self):
                 elif data.getpixel((x,y)) == 0:
                     if y > 1 and y != h-1:
 
-                        #以目标像素点为中心点，获取周围像素点颜色
-                        #0为黑色，255为白色
+                        # Target the pixel point as the center point，Gets the surrounding pixel color
+                        # 0 is black，255 Is white
                         up_color = data.getpixel((x,up))
                         down_color = data.getpixel((x,down))
                         left_color = data.getpixel((left,y))
@@ -93,13 +93,13 @@ def pIx(self):
                         right_up_color = data.getpixel((right,up))
                         right_down_color = data.getpixel((right,down))
 
-                        #去除竖线干扰线
+                        # Remove the vertical line interference line
                         if down_color == 0:
                             if left_color == 255 and left_down_color == 255 and \
                                 right_color == 255 and right_down_color == 255:
                                 data.putpixel((x,y),255)
 
-                        #去除横线干扰线
+                        # Remove the horizontal line
                         elif right_color == 0:
                             if down_color == 255 and right_down_color == 255 and \
                                 up_color == 255 and right_up_color == 255:
@@ -107,14 +107,14 @@ def pIx(self):
 
 
 
-                    #去除斜线干扰线
+                    # Remove slash interference lines
                     if left_color == 255 and right_color == 255 \
                             and up_color == 255 and down_color == 255:
                         data.putpixel((x,y),255)
                 else:
                     pass
 
-                #保存去除干扰线后的图片
+                # Save the image after removing the interference line
                 data.save("test.png","png")
     except:
         return False
