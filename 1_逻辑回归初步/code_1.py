@@ -1,4 +1,5 @@
 from numpy import loadtxt, where
+import pygtk
 from pylab import scatter, show, legend, xlabel, ylabel
 
 def sigmoid(X):
